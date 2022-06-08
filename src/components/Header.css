@@ -1,0 +1,12 @@
+.Header {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  background-color: rgb(35, 35, 35);
+}
+
+.Header__h3 {
+  width: 10%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
