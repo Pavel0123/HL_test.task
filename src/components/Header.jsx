@@ -1,25 +1,19 @@
 import "./Header.css"
 
+//Header component, (keys from table, onClick function)
+  const Header = ({keys,onClick}) => {
 
-//this component renders keys of table 
-  const Header = ({keys}) => {
-
-    //map each key in array
-    //store each key component in the array elements
-    const elements = keys?.map((data,key) => {
+    const elements = keys?.map((props,key) => {
       return(
-      <h3 className="Header__h3" key={key}>{data}</h3>
+      <h3 onClick={() => onClick(props)} className="Header__h3" key={key}>{props}</h3>
       )
     })
 
-    //renders all keys from array
     return (
       <div className="Header">
         {elements}
-        <h3 className="Header__h3" >delete</h3>
       </div>
     )
   }
-
 
   export default Header;

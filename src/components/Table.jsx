@@ -1,76 +1,65 @@
 import "./Table.css"
 import { useState } from "react";
 import Header from "./Header";
+import Row from "./Row";
 
-
-//this component renders one table 
-const Table = (data) => {
+//Exported table component, (data of the table)
+const Table = (body) => {
+  const [table, setTable] = useState();
+  const data = body.body;
 
   //select all keys in table
-  const keys = Object.keys(data?.[0].data)
+  let keys = Object.keys(data?.[0]);
+  keys = keys?.reverse();
+  
+  //Click on header run this function, (clicked key)
+  const sort = (key) => {
+    const sortedData = sortBy(data,key)
+    render(sortedData)
 
-  //map each row in an array
-  //store each row component in the array temptable
-  const tempTable = data.map((props,key) => {
-    return (
-      <div key={key}>
-        <Row props={props} keys={keys}/>
-      </div>
-    )
-  })
+  }
 
+  //Function that stores render to state, (data to render)
+  function render(data) {
+    const tempTable = data.map((props,key) => {
+      return (
+        <Row key={key} data={props} keys={keys}/>
+      )
+    })
+    setTable(tempTable)
+  };
+
+  //render data when loaded
+  useState(() => {
+    return render(data);
+  },[body])
+  
   //render whole table 
   return(
     <div className="Table">
-      <Header keys={keys}/>
-      {tempTable}
+      <Header onClick={sort} keys={keys}/>
+      {table}
     </div>
   )
 }
 
 
-//this component renders one row
-const Row = ({props,keys}) => {
-
-  //state variables for row
-  const [visible,setVisible] = useState(false);
-  const [active,setActive] = useState(true);
-
-  //select all data from specific data layer
-  const data = props.data;
-
-  //select children from specific data layer
-  const children = props.children?.[Object.keys(props.children)[0]]?.records; 
-
-  //map each key in array
-  //store each value corresponding to theyr key
-  const row = keys?.map((key) => {
-    return(
-        <p className="Table__p" key={key}> 
-          {data?.[key]}
-        </p>
-      )
-  })
-
-  //component is active by default 
-  //check if component is active means no one deleted it
-  if(active)
-  // returns row data, and its children in table
-  return (
-    <div>
-
-      <div onClick={() => setVisible((visible) => !visible)} className="Table__data">
-        {row}
-        <p onClick={() => setActive(false)} className="Table__p">x</p>
-      </div>
-      
-      <div style={visible ? {display:"block"} : {display:"none"}} className="Table__children">
-        {children && Table(children)}
-      </div>
-      
-    </div>
-  )
-  return(null)
+//sorting function, (object of data, sorting key)
+function sortBy(data,key) {
+  data.sort(function(a, b) {
+    const nameA = a?.[key] + ""; 
+    const nameB = b?.[key] + ""; 
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+  
+    // if names are equal
+    return 0;
+  });
+  return data;
 }
 
 
